@@ -1,0 +1,39 @@
+name: PR Persona Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  qa-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests
+        run: |
+          echo "Run unit tests here"
+      - name: QA persona review
+        run: |
+          echo "Generate QA review and post comment"
+
+  sre-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run SRE validations
+        run: |
+          echo "Validate deployment/runtime config here"
+      - name: SRE persona review
+        run: |
+          echo "Generate SRE review and post comment"
+
+  security-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run security scans
+        run: |
+          echo "Run CodeQL/dependency checks here"
+      - name: Security persona review
+        run: |
+          echo "Generate Security review and post comment"
