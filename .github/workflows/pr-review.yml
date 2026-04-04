@@ -4,36 +4,72 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   qa-review:
+    name: qa-review
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run tests
-        run: |
-          echo "Run unit tests here"
+
       - name: QA persona review
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Generate QA review and post comment"
+          echo "## ✅ QA Persona Review" > qa_comment.md
+          echo "" >> qa_comment.md
+          echo "**Focus:** Tests, edge cases, correctness" >> qa_comment.md
+          echo "" >> qa_comment.md
+          cat .github/personas/qa.md >> qa_comment.md
+          echo "" >> qa_comment.md
+          echo "_Mock review generated for PR testing._" >> qa_comment.md
+
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --body-file qa_comment.md
+
 
   sre-review:
+    name: sre-review
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run SRE validations
-        run: |
-          echo "Validate deployment/runtime config here"
+
       - name: SRE persona review
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Generate SRE review and post comment"
+          echo "## ⚙️ SRE Persona Review" > sre_comment.md
+          echo "" >> sre_comment.md
+          echo "**Focus:** Reliability, error handling, observability" >> sre_comment.md
+          echo "" >> sre_comment.md
+          cat .github/personas/sre.md >> sre_comment.md
+          echo "" >> sre_comment.md
+          echo "_Mock review generated for PR testing._" >> sre_comment.md
+
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --body-file sre_comment.md
+
 
   security-review:
+    name: security-review
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run security scans
-        run: |
-          echo "Run CodeQL/dependency checks here"
+
       - name: Security persona review
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Generate Security review and post comment"
+          echo "## 🔐 Security Persona Review" > security_comment.md
+          echo "" >> security_comment.md
+          echo "**Focus:** Input validation, secrets, vulnerabilities" >> security_comment.md
+          echo "" >> security_comment.md
+          cat .github/personas/security.md >> security_comment.md
+          echo "" >> security_comment.md
+          echo "_Mock review generated for PR testing._" >> security_comment.md
+
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --body-file security_comment.md
