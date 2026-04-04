@@ -8,8 +8,8 @@ def divide(a, b):
 
 def main():
     operation = input("Enter operation: ")
-    a = float(input("First number: "))
-    b = float(input("Second number: "))
+    a = float(input("First number1: "))
+    b = float(input("Second number2: "))
 
     try:
         if operation == "multiply":
