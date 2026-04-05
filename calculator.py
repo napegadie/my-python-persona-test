@@ -4,7 +4,7 @@ def multiply(a, b):
 
 def divide(a, b):
     if b == 0:
-        return 0   # ❌ silently wrong result
+        raise ZeroDivisionError("Cannot divide by zero")
     return a / b
 
 
@@ -21,7 +21,7 @@ def main():
         else:
             print("Unknown operation")
     except Exception as e:
-        print("Error:", e)
+        print(f"Internal error: {e}")   # intentionally weak for demo
 
 
 if __name__ == "__main__":
