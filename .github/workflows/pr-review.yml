@@ -3,73 +3,160 @@ name: PR Persona Review
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  workflow_dispatch:
 
 permissions:
   contents: read
   pull-requests: write
+
+concurrency:
+  group: pr-persona-review-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   qa-review:
     name: qa-review
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: QA persona review
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build QA comment
+        shell: bash
         run: |
-          echo "## ✅ QA Persona Review" > qa_comment.md
-          echo "" >> qa_comment.md
-          echo "**Focus:** Tests, edge cases, correctness" >> qa_comment.md
-          echo "" >> qa_comment.md
-          cat .github/personas/qa.md >> qa_comment.md
-          echo "" >> qa_comment.md
-          echo "_Mock review generated for PR testing._" >> qa_comment.md
+          set -euxo pipefail
 
-          gh pr comment ${{ github.event.pull_request.number }} \
-            --body-file qa_comment.md
+          {
+            echo "## ✅ QA Persona Review"
+            echo
+            echo "**Focus:** Tests, edge cases, correctness"
+            echo
+            if [ -f ".github/personas/qa.md" ]; then
+              cat .github/personas/qa.md
+            else
+              echo "_qa.md not found_"
+            fi
+            echo
+            echo "_Mock review generated for PR testing._"
+          } > qa_comment.md
 
+          echo "----- qa_comment.md -----"
+          cat qa_comment.md
+
+      - name: Post QA comment to PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('qa_comment.md', 'utf8');
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body
+            });
+
+      - name: Upload QA comment artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-comment
+          path: qa_comment.md
 
   sre-review:
     name: sre-review
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: SRE persona review
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build SRE comment
+        shell: bash
         run: |
-          echo "## ⚙️ SRE Persona Review" > sre_comment.md
-          echo "" >> sre_comment.md
-          echo "**Focus:** Reliability, error handling, observability" >> sre_comment.md
-          echo "" >> sre_comment.md
-          cat .github/personas/sre.md >> sre_comment.md
-          echo "" >> sre_comment.md
-          echo "_Mock review generated for PR testing._" >> sre_comment.md
+          set -euxo pipefail
 
-          gh pr comment ${{ github.event.pull_request.number }} \
-            --body-file sre_comment.md
+          {
+            echo "## ⚙️ SRE Persona Review"
+            echo
+            echo "**Focus:** Reliability, error handling, observability"
+            echo
+            if [ -f ".github/personas/sre.md" ]; then
+              cat .github/personas/sre.md
+            else
+              echo "_sre.md not found_"
+            fi
+            echo
+            echo "_Mock review generated for PR testing._"
+          } > sre_comment.md
 
+          echo "----- sre_comment.md -----"
+          cat sre_comment.md
+
+      - name: Post SRE comment to PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('sre_comment.md', 'utf8');
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body
+            });
+
+      - name: Upload SRE comment artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sre-comment
+          path: sre_comment.md
 
   security-review:
     name: security-review
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Security persona review
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Security comment
+        shell: bash
         run: |
-          echo "## 🔐 Security Persona Review" > security_comment.md
-          echo "" >> security_comment.md
-          echo "**Focus:** Input validation, secrets, vulnerabilities" >> security_comment.md
-          echo "" >> security_comment.md
-          cat .github/personas/security.md >> security_comment.md
-          echo "" >> security_comment.md
-          echo "_Mock review generated for PR testing._" >> security_comment.md
+          set -euxo pipefail
 
-          gh pr comment ${{ github.event.pull_request.number }} \
-            --body-file security_comment.md
+          {
+            echo "## 🔐 Security Persona Review"
+            echo
+            echo "**Focus:** Input validation, secrets, vulnerabilities"
+            echo
+            if [ -f ".github/personas/security.md" ]; then
+              cat .github/personas/security.md
+            else
+              echo "_security.md not found_"
+            fi
+            echo
+            echo "_Mock review generated for PR testing._"
+          } > security_comment.md
+
+          echo "----- security_comment.md -----"
+          cat security_comment.md
+
+      - name: Post Security comment to PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('security_comment.md', 'utf8');
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body
+            });
+
+      - name: Upload Security comment artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-comment
+          path: security_comment.md
