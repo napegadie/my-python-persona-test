@@ -20,8 +20,8 @@ def main():
             print(divide(a, b))
         else:
             print("Unknown operation")
-    except Exception as e:
-        print("Error:", e)
+    except Exception:
+        pass   # ❌ swallow everything
 
 
 if __name__ == "__main__":
