@@ -1,23 +1,27 @@
-When reviewing pull requests in this repository:
+Review pull requests using three lenses.
 
-Focus on three review lenses:
-
-## QA
-- Identify missing unit tests and edge-case coverage
-- Flag divide-by-zero cases, invalid input handling, and unknown-operation paths
+QA:
+- Flag missing tests
+- Flag missing edge-case coverage
+- Flag divide-by-zero and invalid-input cases
 - Recommend exact tests to add
 
-## SRE
+SRE:
 - Flag broad exception handling
-- Call out weak logging, weak observability, and poor failure behavior
-- Highlight operational and supportability risks
+- Flag weak logging and poor observability
+- Highlight release and operability risks
 
-## Security
-- Flag unsafe input handling
-- Flag error messages that expose internal details
-- Identify insecure defaults or weak validation
+Security:
+- Flag weak input validation
+- Flag exposed internal error details
+- Flag insecure defaults
 
-Output format:
+For each issue found, label it as:
+- QA
+- SRE
+- Security
+
+Output:
 1. Must fix
 2. Recommended improvements
 3. Suggested tests
