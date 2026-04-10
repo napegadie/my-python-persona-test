@@ -3,25 +3,21 @@ def multiply(a, b):
 
 
 def divide(a, b):
-    if b == 0:
-        return 0   # ❌ silently wrong result
     return a / b
 
 
 def main():
-    operation = input("Enter operation: ")
-    a = float(input("First number: "))
-    b = float(input("Second number: "))
+    print("Simple Calculator")
+    operation = input("Enter operation (multiply/divide): ")
+    a = float(input("Enter first number: "))
+    b = float(input("Enter second number: "))
 
-    try:
-        if operation == "multiply":
-            print(multiply(a, b))
-        elif operation == "divide":
-            print(divide(a, b))
-        else:
-            print("Unknown operation")
-    except Exception as e:
-        print("Error:", e)
+    if operation == "multiply":
+        print("Result:", multiply(a, b))
+    elif operation == "divide":
+        print("Result:", divide(a, b))
+    else:
+        print("Invalid operation")
 
 
 if __name__ == "__main__":
