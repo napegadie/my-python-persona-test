@@ -1,14 +1,22 @@
-import unittest
-from calculator import multiply, divide
+def multiply(a, b):
+    return a * b
 
+def divide(a, b):
+    return a / b
 
-class TestCalculator(unittest.TestCase):
-    def test_multiply(self):
-        self.assertEqual(multiply(2, 3), 6)
-
-    def test_divide(self):
-        self.assertEqual(divide(10, 2), 5)
-
+def main():
+    operation = input("Enter operation: ")
+    a = float(input("First number: "))
+    b = float(input("Second number: "))
+    try:
+        if operation == "multiply":
+            print(multiply(a, b))
+        elif operation == "divide":
+            print(divide(a, b))
+        else:
+            print("Unknown operation")
+    except Exception as e:
+        print("Error:", e)
 
 if __name__ == "__main__":
-    unittest.main()
+    main()
