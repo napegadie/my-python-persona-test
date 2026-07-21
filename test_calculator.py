@@ -1,3 +1,8 @@
+from calculator import divide
+
+def test_divide_by_zero():
+    assert divide(10, 0) == "Cannot divide by zero."
+
 def multiply(a, b):
     return a * b
 
