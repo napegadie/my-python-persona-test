@@ -7,6 +7,7 @@ def divide(a, b):
         return "Cannot divide by zero."
     return a / b
 
+# to a PR test for each persona
 
 def main():
     print("Simple Calculator")
